@@ -30,10 +30,26 @@ public class BasicCampaignOptmizerTest {
 		this.response=response;
 	}
 	
-	@Parameters
+	@Parameters(name = "test case {index})")
 	public static Collection<Object[]> testData(){
 		return Arrays.asList(new Object[][]{
-					
+				{
+					new CampaignOptimizerRequest(Arrays.asList(new CampaignOptimizerRequest.CustomerCampaignInformation[]{new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000L,210.00),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000L,400.00),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000L,730.00),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000L,1000.00),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000L,160.00),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000L,100.00)})),
+					new CampaignOptimizerResponse(32000000L,3620.00,Arrays.asList(new CampaignSalesQuotas[]{ 
+							new CampaignSalesQuotas("Acme", 0L, 0L, 0L),
+							new CampaignSalesQuotas("Lorem", 8L,28000000L,3200L),
+							new CampaignSalesQuotas("Ipsum", 0L, 0L, 0L),
+							new CampaignSalesQuotas("Dolor", 0L, 0L, 0L),
+							new CampaignSalesQuotas("SIT", 0L, 0L, 0L),
+							new CampaignSalesQuotas("Amet", 2L, 3000000L, 320L),
+							new CampaignSalesQuotas("Mauris", 1L, 1000000L, 100L),
+							}))
+				}
 		});
 	}
 	@Before
@@ -47,16 +63,7 @@ public class BasicCampaignOptmizerTest {
 
 	@Test
 	public void testCampaignOptimizerInput() {
-		CampaignOptimizerRequest request = new CampaignOptimizerRequest(Arrays.asList(new adf[]{{new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000L,210.00),
-			 new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000L,400.00),
-			 new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000L,730.00),
-			 new CampaignOptimizerRequest.CustomerCampaignInformation("SIT,1"0000000L,1000.00),
-			 new CampaignOptimizerRequest.CustomerCampaignInformation("Amet,"1500000L,160.00),
-			 new CampaignOptimizerRequest.CustomerCampaignInformation("Mauri"s,1000000L,100.00)}));
-		 
-		
-		
-		
+	
 		CampaignOptimizerResponse returnedResp = optmizer.optimize(request);
 		
 		assertNotNull(returnedResp);
