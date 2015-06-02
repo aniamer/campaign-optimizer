@@ -28,19 +28,32 @@ public class TestAlgorithmUtilities {
 	@Test
 	public void test() {
 		CampaignOptimizerRequest.CustomerCampaignInformation customerCampaignInformation = new CampaignOptimizerRequest.CustomerCampaignInformation();
-		customerCampaignInformation.setMonthlyAdInventory(32356000L);
+		customerCampaignInformation.setMonthlyAdInventory(32356000);
+														   
 		List<CustomerCampaignInformation> list = new ArrayList<CustomerCampaignInformation>();
 		list.add(customerCampaignInformation);
+		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Acme",2000000,200));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000,400));
+		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000,210));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000,730));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000,1000));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000,160));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000,100));
 		
-		HashMap<Integer, CustomerCampaignInformation> findOptimum = BasicCampaignOptmizer.findOptimum(list);
-		for (Integer wieght : findOptimum.keySet()) {
-			System.out.println(wieght+"----"+ToStringBuilder.reflectionToString(findOptimum.get(wieght)));
+		HashMap<CustomerCampaignInformation, Integer> custmaps = BasicCampaignOptmizer.findOptimum(list);
+		for (CustomerCampaignInformation integer : custmaps.keySet()) {
+			System.out.println(integer.getCustomer()+"  "+custmaps.get(integer));
 		}
+//		for (int i = 0; i < findOptimum.length; i++) {
+//			boolean[] booleans = findOptimum[i];
+//			for (int j = 0; j < booleans.length; j++) {
+//				System.out.print(findOptimum[i][j]);
+//			}
+//			System.out.println();
+//		}	
+		
+			
+//			System.out.println(wieght+"----"+ToStringBuilder.reflectionToString(findOptimum.get(wieght)));
 	}
 
 }

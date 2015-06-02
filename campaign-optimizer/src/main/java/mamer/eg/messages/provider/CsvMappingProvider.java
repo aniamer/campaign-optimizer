@@ -117,12 +117,12 @@ public class CsvMappingProvider implements
 						CsvPreference.STANDARD_PREFERENCE);) {
 
 			CustomerCampaignInformation customerCCInfo = new CustomerCampaignInformation();
-			Long monthlyAdInventory = null;
+			Integer monthlyAdInventory = null;
 			requestReader.read(customerCCInfo,
 					new String[] { "monthlyAdInventory" }, onlyfirstLine);
 			String untokenizedRow = requestReader.getUntokenizedRow();
 
-			monthlyAdInventory = Long.parseLong(untokenizedRow);// read(CampaignOptimizerRequest.class,"monthlyAdInventory",processors);
+			monthlyAdInventory = Integer.parseInt(untokenizedRow);// read(CampaignOptimizerRequest.class,"monthlyAdInventory",processors);
 
 			customerCCInfo.setMonthlyAdInventory(monthlyAdInventory);
 			request = new CampaignOptimizerRequest();

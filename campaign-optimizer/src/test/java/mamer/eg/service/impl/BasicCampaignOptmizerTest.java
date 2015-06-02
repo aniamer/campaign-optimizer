@@ -34,8 +34,10 @@ public class BasicCampaignOptmizerTest {
 	public static Collection<Object[]> testData(){
 		return Arrays.asList(new Object[][]{
 				{
-					new CampaignOptimizerRequest(Arrays.asList(new CampaignOptimizerRequest.CustomerCampaignInformation[]{new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000,210),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000,400),
+					new CampaignOptimizerRequest(Arrays.asList(new CampaignOptimizerRequest.CustomerCampaignInformation[]{
+							new CampaignOptimizerRequest.CustomerCampaignInformation("Acme",2000000,200),
+							new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000,400),
+							new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000,210),
 							 new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000,730),
 							 new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000,1000),
 							 new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000,160),

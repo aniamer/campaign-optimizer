@@ -25,7 +25,7 @@ public class CampaignOptimizerRequest {
 	}
 
 	public static class CustomerCampaignInformation{
-		private Long monthlyAdInventory;
+		private Integer monthlyAdInventory;
 		private String customer;
 		private Integer impPerCampaign;
 		private Integer pricePerCampaign;
@@ -37,7 +37,7 @@ public class CampaignOptimizerRequest {
 			this.pricePerCampaign = pricePerCampaign;
 		}
 
-		public void setMonthlyAdInventory(Long monthlyAdInventory) {
+		public void setMonthlyAdInventory(Integer monthlyAdInventory) {
 			this.monthlyAdInventory = monthlyAdInventory;
 		}
 		
@@ -64,7 +64,7 @@ public class CampaignOptimizerRequest {
 		public Integer getPricePerCampaign() {
 			return pricePerCampaign;
 		}
-		public Long getMonthlyAdInventory() {
+		public Integer getMonthlyAdInventory() {
 			return monthlyAdInventory;
 		}
 	}
