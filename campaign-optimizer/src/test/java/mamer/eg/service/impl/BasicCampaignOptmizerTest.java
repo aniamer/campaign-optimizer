@@ -34,12 +34,12 @@ public class BasicCampaignOptmizerTest {
 	public static Collection<Object[]> testData(){
 		return Arrays.asList(new Object[][]{
 				{
-					new CampaignOptimizerRequest(Arrays.asList(new CampaignOptimizerRequest.CustomerCampaignInformation[]{new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000L,210.00),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000L,400.00),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000L,730.00),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000L,1000.00),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000L,160.00),
-							 new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000L,100.00)})),
+					new CampaignOptimizerRequest(Arrays.asList(new CampaignOptimizerRequest.CustomerCampaignInformation[]{new CampaignOptimizerRequest.CustomerCampaignInformation("Ipsum",2300000,210),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Lorem",3500000,400),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Dolor",8000000,730),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000,1000),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000,160),
+							 new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000,100)})),
 					new CampaignOptimizerResponse(32000000L,3620.00,Arrays.asList(new CampaignSalesQuotas[]{ 
 							new CampaignSalesQuotas("Acme", 0L, 0L, 0L),
 							new CampaignSalesQuotas("Lorem", 8L,28000000L,3200L),

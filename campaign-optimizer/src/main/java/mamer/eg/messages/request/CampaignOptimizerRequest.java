@@ -27,11 +27,11 @@ public class CampaignOptimizerRequest {
 	public static class CustomerCampaignInformation{
 		private Long monthlyAdInventory;
 		private String customer;
-		private Long impPerCampaign;
-		private Double pricePerCampaign;
+		private Integer impPerCampaign;
+		private Integer pricePerCampaign;
 		public CustomerCampaignInformation(){}
 		public CustomerCampaignInformation(String customer,
-				Long impPerCampaign, Double pricePerCampaign) {
+				Integer impPerCampaign, Integer pricePerCampaign) {
 			this.customer = customer;
 			this.impPerCampaign = impPerCampaign;
 			this.pricePerCampaign = pricePerCampaign;
@@ -45,11 +45,11 @@ public class CampaignOptimizerRequest {
 			this.customer = customer;
 		}
 
-		public void setImpPerCampaign(Long impPerCampaign) {
+		public void setImpPerCampaign(Integer impPerCampaign) {
 			this.impPerCampaign = impPerCampaign;
 		}
 
-		public void setPricePerCampaign(Double pricePerCampaign) {
+		public void setPricePerCampaign(Integer pricePerCampaign) {
 			this.pricePerCampaign = pricePerCampaign;
 		}
 		
@@ -57,11 +57,11 @@ public class CampaignOptimizerRequest {
 			return customer;
 		}
 
-		public Long getImpPerCampaign() {
+		public Integer getImpPerCampaign() {
 			return impPerCampaign;
 		}
 
-		public Double getPricePerCampaign() {
+		public Integer getPricePerCampaign() {
 			return pricePerCampaign;
 		}
 		public Long getMonthlyAdInventory() {
