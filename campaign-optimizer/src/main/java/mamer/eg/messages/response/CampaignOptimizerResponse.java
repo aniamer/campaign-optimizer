@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CampaignOptimizerResponse {
-	private Long totalNoImp;
-	private Double totalRevenue;
+	private Integer totalNoImp;
+	private Integer totalRevenue;
 	private List<CampaignSalesQuotas> campaignSalesQuotas;
 	
-	public CampaignOptimizerResponse(Long totalNoImp, Double totalRevenue) {
+	public CampaignOptimizerResponse(Integer totalNoImp, Integer totalRevenue) {
 		super();
 		this.totalNoImp = totalNoImp;
 		this.totalRevenue = totalRevenue;
 		this.campaignSalesQuotas = new ArrayList<CampaignSalesQuotas>();
 	}
 	
-	public CampaignOptimizerResponse(Long totalNoImp, Double totalRevenue, List<CampaignSalesQuotas> campaignSalesQuotas) {
+	public CampaignOptimizerResponse(Integer totalNoImp, Integer totalRevenue, List<CampaignSalesQuotas> campaignSalesQuotas) {
 		this.totalNoImp = totalNoImp;
 		this.totalRevenue = totalRevenue;
 		this.campaignSalesQuotas = campaignSalesQuotas;
 	}
 
-	public Long getTotalNoImp() {
+	public Integer getTotalNoImp() {
 		return totalNoImp;
 	}
 
-	public Double getTotalRevenue() {
+	public Integer getTotalRevenue() {
 		return totalRevenue;
 	}
 
@@ -39,12 +39,12 @@ public class CampaignOptimizerResponse {
 	
 	public static class CampaignSalesQuotas{
 		private String customer;
-		private Long noCampaigns;
-		private Long totalImpressions;
-		private Long customerRevenue;
+		private Integer noCampaigns;
+		private Integer totalImpressions;
+		private Integer customerRevenue;
 		
-		public CampaignSalesQuotas(String customer, Long noCampaigns,
-				Long totalImpressions, Long customerRevenue) {
+		public CampaignSalesQuotas(String customer, Integer noCampaigns,
+				Integer totalImpressions, Integer customerRevenue) {
 			super();
 			this.customer = customer;
 			this.noCampaigns = noCampaigns;
@@ -56,16 +56,25 @@ public class CampaignOptimizerResponse {
 			return customer;
 		}
 
-		public Long getNoCampaigns() {
+		public Integer getNoCampaigns() {
 			return noCampaigns;
 		}
 
-		public Long getTotalImpressions() {
+		public Integer getTotalImpressions() {
 			return totalImpressions;
 		}
 
-		public Long getCustomerRevenue() {
+		public Integer getCustomerRevenue() {
 			return customerRevenue;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			CampaignSalesQuotas toCompare=(CampaignSalesQuotas)obj;
+			return this.totalImpressions.equals(toCompare.getTotalImpressions()) &&
+			this.customer.equals(toCompare.getCustomer())&&
+			this.customerRevenue.equals(toCompare.getCustomerRevenue())&&
+			this.noCampaigns.equals(toCompare.noCampaigns);
 		}
 	}
 }

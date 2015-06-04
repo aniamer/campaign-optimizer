@@ -31,7 +31,7 @@ public class AppTest {
 				CsvPreference.STANDARD_PREFERENCE);
 		ArrayList<CampaignOptimizerResponse.CampaignSalesQuotas> list = new ArrayList<CampaignOptimizerResponse.CampaignSalesQuotas>();
 		list.add(new CampaignOptimizerResponse.CampaignSalesQuotas("Acme",
-				20000L, 2323L, 3252345L));
+				20000, 2323, 3252345));
 		for (CampaignSalesQuotas campaignSalesQuota : list) {
 			responseWriter.write(campaignSalesQuota, responseMapping);
 

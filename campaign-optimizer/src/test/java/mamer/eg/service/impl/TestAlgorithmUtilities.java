@@ -40,9 +40,9 @@ public class TestAlgorithmUtilities {
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000,160));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000,100));
 		
-		HashMap<CustomerCampaignInformation, Integer> custmaps = BasicCampaignOptmizer.findOptimum(list);
-		for (CustomerCampaignInformation integer : custmaps.keySet()) {
-			System.out.println(integer.getCustomer()+"  "+custmaps.get(integer));
+		int [] custmaps = BasicCampaignOptmizer.findOptimum(list);
+		for (int i = 0; i < custmaps.length; i++) {
+			System.out.println(i+"  "+custmaps[i]);
 		}
 //		for (int i = 0; i < findOptimum.length; i++) {
 //			boolean[] booleans = findOptimum[i];
