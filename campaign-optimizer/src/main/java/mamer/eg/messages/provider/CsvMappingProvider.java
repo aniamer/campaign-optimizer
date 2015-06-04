@@ -27,6 +27,7 @@ import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.cellprocessor.ParseDouble;
+import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ParseLong;
 import org.supercsv.cellprocessor.constraint.ForbidSubStr;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -53,10 +54,10 @@ public class CsvMappingProvider implements
 
 	final CellProcessor[] allProcessors = new CellProcessor[] {
 			new ForbidSubStr(" "), // customer can't contain space
-			new ParseLong(), // noCampaigns
-			new ParseDouble() }; // customerRevenue
+			new ParseInt(), // noCampaigns
+			new ParseInt() }; // customerRevenue
 
-	final CellProcessor[] onlyfirstLine = new CellProcessor[] { new ParseLong() }; // customerRevenue
+	final CellProcessor[] onlyfirstLine = new CellProcessor[] { new ParseInt() }; // customerRevenue
 
 	@PostConstruct
 	protected void initialize() {
@@ -126,6 +127,7 @@ public class CsvMappingProvider implements
 
 			customerCCInfo.setMonthlyAdInventory(monthlyAdInventory);
 			request = new CampaignOptimizerRequest();
+			request.addCustomerInfo(customerCCInfo);
 			while ((customerCCInfo=requestReader.read(CustomerCampaignInformation.class,
 					requestMapping, allProcessors)) != null) {
 				request.addCustomerInfo(customerCCInfo);

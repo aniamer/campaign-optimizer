@@ -39,8 +39,8 @@ public class TestAlgorithmUtilities {
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("SIT",10000000,1000));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Amet",1500000,160));
 		list.add(new CampaignOptimizerRequest.CustomerCampaignInformation("Mauris",1000000,100));
-		
-		int [] custmaps = BasicCampaignOptmizer.findOptimum(list);
+		BasicCampaignOptmizer opti = new BasicCampaignOptmizer();
+		int [] custmaps = opti.findOptimum(list);
 		for (int i = 0; i < custmaps.length; i++) {
 			System.out.println(i+"  "+custmaps[i]);
 		}

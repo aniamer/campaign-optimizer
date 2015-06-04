@@ -1,7 +1,10 @@
 package mamer.eg.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest;
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
@@ -9,12 +12,20 @@ import mamer.eg.messages.response.CampaignOptimizerResponse;
 import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 
 public class BasicCampaignOptmizer implements CampaignOptimizer {
+	private ExecutorService servicePool;
 
+	public BasicCampaignOptmizer() {
+		servicePool = Executors.newFixedThreadPool(5);
+	}
+	
 	@Override
 	public CampaignOptimizerResponse optimize(CampaignOptimizerRequest request) {
 		List<CustomerCampaignInformation> customerCampaignInfos = request
 				.getcustomerCampaignInfo();
-		int[] customerCombinations = findOptimum(customerCampaignInfos);
+
+//		int[] customerCombinations = findOptimum(customerCampaignInfos);
+		int[] customerCombinations = chunckedFindOptimum(customerCampaignInfos);
+
 		List<CampaignOptimizerResponse.CampaignSalesQuotas> campSalesQuotas = new ArrayList<CampaignOptimizerResponse.CampaignSalesQuotas>();
 		int totalNoImpressions = 0;
 		int totalRevenue = 0;
@@ -33,14 +44,27 @@ public class BasicCampaignOptmizer implements CampaignOptimizer {
 				campSalesQuotas);
 	}
 
-	static int[] findOptimum(
+	int[] chunckedFindOptimum(
 			List<CustomerCampaignInformation> customerCampaignInfos) {
 		Integer monthlyAdInventory = customerCampaignInfos.get(0)
 				.getMonthlyAdInventory();
-		final Integer scaledMinv = monthlyAdInventory;
+		int INDEX_STEP =1;
+		if(monthlyAdInventory >100000000){
+			BigInteger gcd = new BigInteger(monthlyAdInventory.toString());
+			
+			for (int i=1 ; i< customerCampaignInfos.size();i++) {
+				Integer impPerCampaign = customerCampaignInfos.get(i).getImpPerCampaign();
+				gcd = gcd.gcd(new BigInteger(impPerCampaign.toString()));
+			}
+			INDEX_STEP = gcd.intValue();
+		}
+		
+			
+		
+		Integer scaledMinv = monthlyAdInventory/INDEX_STEP;
 		int[] maxValuePerSize = new int[scaledMinv + 1];
 		int[] whichCustomer = new int[scaledMinv + 1];
-		int[] customerCombination = new int[scaledMinv + 1];
+		int[] customerCombination = new int[customerCampaignInfos.size()];
 
 		for (int i = 0; i < whichCustomer.length; i++) {
 			whichCustomer[i] = -1;
@@ -48,23 +72,72 @@ public class BasicCampaignOptmizer implements CampaignOptimizer {
 		for (int i = 0; i < maxValuePerSize.length; i++) {
 			maxValuePerSize[i] = 0;
 		}
-
+		
+		
 		for (int i = 0; i < scaledMinv + 1; i++) {
-			for (int n = 0; n < customerCampaignInfos.size(); n++) {
-				CustomerCampaignInformation next = customerCampaignInfos.get(n);
-				int weight = (next.getImpPerCampaign() != null) ? (next
-						.getImpPerCampaign()) : 0;
-				Integer value = next.getPricePerCampaign();
-
-				if (weight != 0
-						&& weight <= i
-						&& (value + maxValuePerSize[i - weight] > maxValuePerSize[i])) {
-					maxValuePerSize[i] = value + maxValuePerSize[i - weight];
-					whichCustomer[i] = n;
+				for (int n = 0; n < customerCampaignInfos.size(); n++) {
+					CustomerCampaignInformation next = customerCampaignInfos.get(n);
+					int weight = (next.getImpPerCampaign() != null) ? (next
+							.getImpPerCampaign()/INDEX_STEP) : 0;
+					Integer value = next.getPricePerCampaign();
+		
+					if (weight != 0
+							&& weight <= i
+							&& (value + maxValuePerSize[i - weight] > maxValuePerSize[i])) {
+						maxValuePerSize[i] = value + maxValuePerSize[i - weight];
+						whichCustomer[i] = n;
+					}
+		
 				}
-
 			}
+		
+		int inventoryLeft = whichCustomer.length - 1;
+		int suitableCamp = whichCustomer[inventoryLeft];
+		int[] custCombMap = new int[customerCampaignInfos.size()];
+		while (suitableCamp != -1 && inventoryLeft > 0) {
+			customerCombination[suitableCamp]++;
+			CustomerCampaignInformation next = customerCampaignInfos
+					.get(suitableCamp);
+			int weight = next.getImpPerCampaign()/INDEX_STEP;
+			custCombMap[suitableCamp] = customerCombination[suitableCamp];
+			inventoryLeft = inventoryLeft - weight;
+			suitableCamp = whichCustomer[inventoryLeft];
 		}
+
+		return custCombMap;
+	}
+	int[] findOptimum(
+			List<CustomerCampaignInformation> customerCampaignInfos) {
+		Integer monthlyAdInventory = customerCampaignInfos.get(0)
+				.getMonthlyAdInventory();
+		Integer scaledMinv = monthlyAdInventory;
+		int[] maxValuePerSize = new int[scaledMinv + 1];
+		int[] whichCustomer = new int[scaledMinv + 1];
+		int[] customerCombination = new int[customerCampaignInfos.size()];
+
+		for (int i = 0; i < whichCustomer.length; i++) {
+			whichCustomer[i] = -1;
+		}
+		for (int i = 0; i < maxValuePerSize.length; i++) {
+			maxValuePerSize[i] = 0;
+		}
+		
+		for (int i = 0; i < scaledMinv + 1; i++) {
+				for (int n = 0; n < customerCampaignInfos.size(); n++) {
+					CustomerCampaignInformation next = customerCampaignInfos.get(n);
+					int weight = (next.getImpPerCampaign() != null) ? (next
+							.getImpPerCampaign()) : 0;
+					Integer value = next.getPricePerCampaign();
+		
+					if (weight != 0
+							&& weight <= i
+							&& (value + maxValuePerSize[i - weight] > maxValuePerSize[i])) {
+						maxValuePerSize[i] = value + maxValuePerSize[i - weight];
+						whichCustomer[i] = n;
+					}
+		
+				}
+			}
 		
 		int inventoryLeft = whichCustomer.length - 1;
 		int suitableCamp = whichCustomer[inventoryLeft];

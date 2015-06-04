@@ -65,7 +65,7 @@ public class CampaignOptimizerRequest {
 			return pricePerCampaign;
 		}
 		public Integer getMonthlyAdInventory() {
-			return monthlyAdInventory;
+			return this.monthlyAdInventory;
 		}
 	}
 	
