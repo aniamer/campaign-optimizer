@@ -2,7 +2,10 @@
 a restful service that expects a csv input and return a csv output.
 
 ## Building the service
+use java 7 and maven 3.x
+
 inside the campaign-optimizer/ run 
+
 	maven clean install
 
 ## Running the service
