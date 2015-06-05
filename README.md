@@ -7,9 +7,9 @@ inside the campaign-optimizer/ run
 
 ## Running the service
 
-        java -jar target/campaign-optimizer.jar
-
+	java -Xms512M -Xmx1024M -jar target/campaign-optimizer-0.0.1-SNAPSHOT.jar server
 
 ## Testing the service
-
+	
+	curl -X POST http://localhost:8080/campaignOptimizer/ --data-binary "@../samples/sample_2.csv" -H "Content-Type: text/csv" -H "Accept: text/csv"
 

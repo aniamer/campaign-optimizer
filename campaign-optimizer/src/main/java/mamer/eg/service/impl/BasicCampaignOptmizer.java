@@ -3,8 +3,6 @@ package mamer.eg.service.impl;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest;
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
@@ -12,18 +10,15 @@ import mamer.eg.messages.response.CampaignOptimizerResponse;
 import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 
 public class BasicCampaignOptmizer implements CampaignOptimizer {
-	private ExecutorService servicePool;
 
 	public BasicCampaignOptmizer() {
-		servicePool = Executors.newFixedThreadPool(5);
 	}
 	
 	@Override
 	public CampaignOptimizerResponse optimize(CampaignOptimizerRequest request) {
 		List<CustomerCampaignInformation> customerCampaignInfos = request
 				.getcustomerCampaignInfo();
-
-//		int[] customerCombinations = findOptimum(customerCampaignInfos);
+		
 		int[] customerCombinations = chunckedFindOptimum(customerCampaignInfos);
 
 		List<CampaignOptimizerResponse.CampaignSalesQuotas> campSalesQuotas = new ArrayList<CampaignOptimizerResponse.CampaignSalesQuotas>();
@@ -49,7 +44,7 @@ public class BasicCampaignOptmizer implements CampaignOptimizer {
 		Integer monthlyAdInventory = customerCampaignInfos.get(0)
 				.getMonthlyAdInventory();
 		int INDEX_STEP =1;
-		if(monthlyAdInventory >100000000){
+		if(monthlyAdInventory > Integer.MAX_VALUE/2){
 			BigInteger gcd = new BigInteger(monthlyAdInventory.toString());
 			
 			for (int i=1 ; i< customerCampaignInfos.size();i++) {
