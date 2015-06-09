@@ -7,7 +7,9 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
 /**
- * Hello world!
+ * Main Server Bootstraper
+ *s
+ * @author mohamedamer
  *
  */
 public class CampaignOptimizerApplication extends
