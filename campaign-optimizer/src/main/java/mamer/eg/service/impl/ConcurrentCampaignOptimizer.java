@@ -1,49 +1,37 @@
 package mamer.eg.service.impl;
 
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.concurrent.ForkJoinPool;
 
+import mamer.eg.messages.request.CampaignOptimizerRequest;
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
+import mamer.eg.messages.response.CampaignOptimizerResponse;
 
-public class ConcurrentCampaignOptimizer implements Callable<int[]>{
-	private List<CustomerCampaignInformation> customerCampaignInfos;
-	private int[] valuesForWeight;
-	private int[] whichCustomer;
-	
-	public ConcurrentCampaignOptimizer(int chunkSize, List<CustomerCampaignInformation> customerCampaignInfos) {
-		this.valuesForWeight=new int[chunkSize];
-		this.whichCustomer=new int[chunkSize];
-		this.customerCampaignInfos = customerCampaignInfos;
+
+public class ConcurrentCampaignOptimizer implements CampaignOptimizer{
+	ForkJoinPool pool;
+
+	public List<MaxValPerSizeChunk> findMaxPerWieght(List<CustomerCampaignInformation> ccinfo, Integer weightLength){
+		pool = new ForkJoinPool();
+		MaxValueFinder maxValueFinder = new MaxValueFinder(weightLength, ccinfo, 0);
+		List<MaxValPerSizeChunk> result = pool.invoke(maxValueFinder);
+		do
+	      {
+	         System.out.printf("******************************************\n");
+	         System.out.printf("Main: Parallelism: %d\n", pool.getParallelism());
+	         System.out.printf("Main: Active Threads: %d\n", pool.getActiveThreadCount());
+	         System.out.printf("Main: Task Count: %d\n", pool.getQueuedTaskCount());
+	         System.out.printf("Main: Steal Count: %d\n", pool.getStealCount());
+	         System.out.printf("******************************************\n");
+	         
+	      } while (!maxValueFinder.isDone());
+//		pool.shutdown();
+//		List<MaxValPerSizeChunk> result = maxValueFinder.join();
+		return result;
 	}
-	
 	@Override
-	public int[] call() throws Exception {
-
-		for (int i = 0; i < whichCustomer.length; i++) {
-			whichCustomer[i] = -1;
-		}
-		for (int i = 0; i < valuesForWeight.length; i++) {
-			valuesForWeight[i] = 0;
-		}
+	public CampaignOptimizerResponse optimize(CampaignOptimizerRequest request) {
 		
-		for (int i = 0; i < valuesForWeight.length; i++) {
-			for (int n = 0; n < customerCampaignInfos.size(); n++) {
-				CustomerCampaignInformation next = customerCampaignInfos.get(n);
-				int weight = (next.getImpPerCampaign() != null) ? (next
-						.getImpPerCampaign()) : 0;
-				Integer value = next.getPricePerCampaign();
-
-				if (weight != 0
-						&& weight <= i
-						&& (value + valuesForWeight[i - weight] > valuesForWeight[i])) {
-					valuesForWeight[i] = value + valuesForWeight[i - weight];
-					whichCustomer[i] = n;
-				}
-
-			}
-		}
-		
-		return whichCustomer;
+		return null;
 	}
-
 }

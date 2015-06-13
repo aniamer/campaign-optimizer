@@ -10,18 +10,23 @@ import java.util.List;
 import javax.print.attribute.standard.RequestingUserName;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest;
+import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
 import mamer.eg.messages.response.CampaignOptimizerResponse;
 import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(Parameterized.class)
 public class BasicCampaignOptmizerTest {
+	Logger logger = LoggerFactory.getLogger(getClass()); 
 	CampaignOptimizer optmizer;
 	CampaignOptimizerRequest request;
 	CampaignOptimizerResponse response;
@@ -117,5 +122,6 @@ public class BasicCampaignOptmizerTest {
 		
 	
 	}
+
 
 }
