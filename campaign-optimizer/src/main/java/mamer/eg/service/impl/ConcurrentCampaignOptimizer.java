@@ -2,6 +2,7 @@ package mamer.eg.service.impl;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest;
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
@@ -11,12 +12,13 @@ import mamer.eg.messages.response.CampaignOptimizerResponse;
 public class ConcurrentCampaignOptimizer implements CampaignOptimizer{
 	ForkJoinPool pool;
 
-	public List<MaxValPerSizeChunk> findMaxPerWieght(List<CustomerCampaignInformation> ccinfo, Integer weightLength){
+	public List<MaxValPerSizeChunk> findMaxPerWieght(List<CustomerCampaignInformation> ccinfo, Integer weightLength) throws InterruptedException{
 		pool = new ForkJoinPool();
 		MaxValueFinder maxValueFinder = new MaxValueFinder(weightLength, ccinfo, 0);
-		List<MaxValPerSizeChunk> result = pool.invoke(maxValueFinder);
+		pool.execute(maxValueFinder);
 		do
 	      {
+			TimeUnit.SECONDS.sleep(1l);
 	         System.out.printf("******************************************\n");
 	         System.out.printf("Main: Parallelism: %d\n", pool.getParallelism());
 	         System.out.printf("Main: Active Threads: %d\n", pool.getActiveThreadCount());
@@ -25,8 +27,8 @@ public class ConcurrentCampaignOptimizer implements CampaignOptimizer{
 	         System.out.printf("******************************************\n");
 	         
 	      } while (!maxValueFinder.isDone());
-//		pool.shutdown();
-//		List<MaxValPerSizeChunk> result = maxValueFinder.join();
+		pool.shutdown();
+		List<MaxValPerSizeChunk> result = maxValueFinder.join();
 		return result;
 	}
 	@Override

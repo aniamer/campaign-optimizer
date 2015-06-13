@@ -43,7 +43,7 @@ public class MaxValueFinder extends RecursiveTask<List<MaxValPerSizeChunk>> {
 							maxValPerSizeChunk.maxVal = value+prevMaxVal;
 							maxValPerSizeChunk.whichCustomer = n;
 							maxValuePerSize[i] = maxValPerSizeChunk;
-//							results.add(maxValPerSizeChunk);
+							results.add(maxValPerSizeChunk);
 						}
 					}
 				}
@@ -58,17 +58,17 @@ public class MaxValueFinder extends RecursiveTask<List<MaxValPerSizeChunk>> {
 	@Override
 	protected List<MaxValPerSizeChunk> compute() {
 		List<MaxValPerSizeChunk> copiedList=new ArrayList<MaxValPerSizeChunk>();
-		if(weightLength >1000000){
+		if(weightLength >30000000){
 				ArrayList<MaxValueFinder> list = new ArrayList<MaxValueFinder>(); 
 				int chunkLength = weightLength/2;
 				for(int i = 0 ; i< weightLength ; i+=chunkLength) {
 					MaxValueFinder task = new MaxValueFinder(chunkLength, cCampInfo,i);
 					task.fork();
-					list.add(task);
+					MaxValueFinder task2 = new MaxValueFinder(chunkLength, cCampInfo,i);
+					copiedList.addAll(task2.compute());
+					copiedList.addAll(task.join());
+					
 				}
-			for (MaxValueFinder maxValueFinder : list) {
-				copiedList.addAll(maxValueFinder.join());
-			}
 			return copiedList;
 		}else{
 			if(maxValuePerSize == null)
