@@ -12,9 +12,9 @@ import mamer.eg.messages.response.CampaignOptimizerResponse;
 public class ConcurrentCampaignOptimizer implements CampaignOptimizer{
 	ForkJoinPool pool;
 
-	public List<MaxValPerSizeChunk> findMaxPerWieght(List<CustomerCampaignInformation> ccinfo, Integer weightLength) throws InterruptedException{
+	public MaxValPerSizeChunk findMaxPerWieght(List<CustomerCampaignInformation> ccinfo, Integer weightLength) throws InterruptedException{
 		pool = new ForkJoinPool();
-		MaxValueFinder maxValueFinder = new MaxValueFinder(weightLength, ccinfo, 0);
+		MaxValueFinder maxValueFinder = new MaxValueFinder(weightLength, ccinfo);
 		pool.execute(maxValueFinder);
 		do
 	      {
@@ -28,7 +28,7 @@ public class ConcurrentCampaignOptimizer implements CampaignOptimizer{
 	         
 	      } while (!maxValueFinder.isDone());
 		pool.shutdown();
-		List<MaxValPerSizeChunk> result = maxValueFinder.join();
+		MaxValPerSizeChunk result = maxValueFinder.join();
 		return result;
 	}
 	@Override

@@ -13,13 +13,14 @@ import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Ignore
 @RunWith(Parameterized.class)
 public class ConcurrentCampaignOptimizerTest {
 	Logger logger = LoggerFactory.getLogger(getClass()); 
@@ -100,8 +101,8 @@ public class ConcurrentCampaignOptimizerTest {
 	@Test
 	public void testConcurrentOptimizer() throws Exception {
 		List<CustomerCampaignInformation> custInfo = request.getcustomerCampaignInfo();
-		List<MaxValPerSizeChunk> findMaxPerWieght = optmizer.findMaxPerWieght(custInfo, custInfo.get(0).getMonthlyAdInventory());
-		logger.info(findMaxPerWieght.size()+"");
+		MaxValPerSizeChunk findMaxPerWieght = optmizer.findMaxPerWieght(custInfo, custInfo.get(0).getMonthlyAdInventory());
+		logger.info(ToStringBuilder.reflectionToString(findMaxPerWieght));
 //		for (MaxValPerSizeChunk maxValPerSizeChunk : findMaxPerWieght) {
 //			logger.info(ToStringBuilder.reflectionToString(maxValPerSizeChunk));
 //		}

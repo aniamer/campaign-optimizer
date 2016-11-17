@@ -1,84 +1,100 @@
 package mamer.eg.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ListIterator;
 import java.util.concurrent.RecursiveTask;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
 
-public class MaxValueFinder extends RecursiveTask<List<MaxValPerSizeChunk>> {
+public class MaxValueFinder extends RecursiveTask<MaxValPerSizeChunk>{
 
 	Integer weightLength;
-	Integer startFrom;
 	List<CustomerCampaignInformation> cCampInfo;
 	MaxValPerSizeChunk[] maxValuePerSize; 
 
-	public MaxValueFinder(Integer weightLength, List<CustomerCampaignInformation> cCampInfo, Integer startFrom) {
+	public MaxValueFinder(Integer weightLength, List<CustomerCampaignInformation> cCampInfo) {
 		this.weightLength = weightLength;
 		this.cCampInfo = cCampInfo;
-		this.startFrom=startFrom;
-		
+		maxValuePerSize= new MaxValPerSizeChunk[cCampInfo.size()];
 	}
 
-	protected List<MaxValPerSizeChunk> computeDirectly() {
-		MaxValPerSizeChunk maxValPerSizeChunk = new MaxValPerSizeChunk(0,0);
-		maxValuePerSize[0]=maxValPerSizeChunk;
-		List<MaxValPerSizeChunk> results = new LinkedList<MaxValPerSizeChunk>();
-		for (int i = 0; i < weightLength ; i++) {
-			for (int n = 0; n < cCampInfo.size(); n++) {
-				CustomerCampaignInformation next = cCampInfo.get(n);
-				int weight = (next.getImpPerCampaign() != null) ? (next
-						.getImpPerCampaign()) : 0;
-				Integer value = next.getPricePerCampaign();
-				
-				if (weight != 0
-						&& weight <= i) {
-					Integer prevMaxVal = maxValuePerSize[i-weight] == null ? 0 :maxValuePerSize[i - weight].maxVal;
-					Integer curMaxVal = maxValuePerSize[i] == null ?0 :maxValuePerSize[i].maxVal;
-						if((value + prevMaxVal > curMaxVal)){
-							maxValPerSizeChunk.maxVal = value+prevMaxVal;
-							maxValPerSizeChunk.whichCustomer = n;
-							maxValuePerSize[i] = maxValPerSizeChunk;
-							results.add(maxValPerSizeChunk);
-						}
-					}
-				}
-	
-			}	
-		maxValuePerSize=null;
-		return results;
+	protected MaxValPerSizeChunk computeDirectly() {
+		MaxValPerSizeChunk[] valResult= new MaxValPerSizeChunk[cCampInfo.size()];
+		MaxValPerSizeChunk finalResult= null;
+		
+		
+		for (int i = 1; i < cCampInfo.size(); i++) {
+			CustomerCampaignInformation customerCampaignInformation = cCampInfo
+					.get(i);
+			Integer weight = customerCampaignInformation.getImpPerCampaign();
+			
+			if (weight <= weightLength) {
+				Integer value = customerCampaignInformation.getPricePerCampaign();
+				valResult[i] = new MaxValPerSizeChunk(maxValuePerSize[i].maxVal+value, i);
+			}else{
+				valResult[i] = new MaxValPerSizeChunk(0, i);
+			}
+		}
+		
+		finalResult = valResult[1];
+		for (int i = 1; i < cCampInfo.size(); i++) {
+			if(valResult[i].maxVal > finalResult.maxVal)
+				finalResult = valResult[i];
+		}
+		
+		return finalResult;
 		}
 	
 	
 	
 	@Override
-	protected List<MaxValPerSizeChunk> compute() {
-		List<MaxValPerSizeChunk> copiedList=new ArrayList<MaxValPerSizeChunk>();
-		if(weightLength >30000000){
-				ArrayList<MaxValueFinder> list = new ArrayList<MaxValueFinder>(); 
-				int chunkLength = weightLength/2;
-				for(int i = 0 ; i< weightLength ; i+=chunkLength) {
-					MaxValueFinder task = new MaxValueFinder(chunkLength, cCampInfo,i);
-					task.fork();
-					MaxValueFinder task2 = new MaxValueFinder(chunkLength, cCampInfo,i);
-					copiedList.addAll(task2.compute());
-					copiedList.addAll(task.join());
-					
-				}
-			return copiedList;
-		}else{
-			if(maxValuePerSize == null)
-				maxValuePerSize = new MaxValPerSizeChunk[weightLength];
-			else
-				maxValuePerSize=Arrays.copyOf(maxValuePerSize, weightLength);
-			return computeDirectly();
+	protected MaxValPerSizeChunk compute() {
+		List<MaxValueFinder> taskList= new LinkedList<MaxValueFinder>();
+		for (int i = 1; i < cCampInfo.size(); i++) {
+			CustomerCampaignInformation customerCampaignInformation = cCampInfo
+					.get(i);
+			Integer weight = customerCampaignInformation.getImpPerCampaign();
+			int newW = weightLength;
+			if (weight <= weightLength) {
+				newW -= weight;
+				MaxValueFinder task=new MaxValueFinder(newW,
+						cCampInfo);
+				taskList.add(task);
+			}else{
+				maxValuePerSize[i] = new MaxValPerSizeChunk(0, i);
+			}
 		}
-			
 		
+		boolean flag = false;
+		for (ListIterator<MaxValueFinder> iterator = taskList.listIterator(); iterator.hasNext();) {
+			
+			if(iterator.nextIndex()%2==0){
+				MaxValueFinder next = (MaxValueFinder) iterator.next();
+				
+				if(flag)
+					next.join();
+				else
+					next.fork();
+				flag = !flag;
+			}else{
+				MaxValueFinder first = (MaxValueFinder) iterator.next();
+				first.compute();
+				
+			}
+				
+				
+			
+			
+		}
+//		for (MaxValueFinder maxValueFinder : taskList) {
+//			MaxValPerSizeChunk result = maxValueFinder.join();
+//			maxValuePerSize[result.whichCustomer]= result;
+//		}
+		MaxValPerSizeChunk computeDirectly = this.computeDirectly();
+		return computeDirectly;
 	}
 
 }

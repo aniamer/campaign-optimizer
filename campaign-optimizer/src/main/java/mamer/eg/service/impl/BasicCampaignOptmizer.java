@@ -2,7 +2,9 @@ package mamer.eg.service.impl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mamer.eg.messages.request.CampaignOptimizerRequest;
 import mamer.eg.messages.request.CampaignOptimizerRequest.CustomerCampaignInformation;
@@ -45,11 +47,11 @@ public class BasicCampaignOptmizer implements CampaignOptimizer {
 				.getMonthlyAdInventory();
 		int INDEX_STEP =1;
 		if(monthlyAdInventory > Integer.MAX_VALUE/2){
-			BigInteger gcd = new BigInteger(monthlyAdInventory.toString());
+			BigInteger gcd = BigInteger.valueOf(monthlyAdInventory);
 			
 			for (int i=1 ; i< customerCampaignInfos.size();i++) {
 				Integer impPerCampaign = customerCampaignInfos.get(i).getImpPerCampaign();
-				gcd = gcd.gcd(new BigInteger(impPerCampaign.toString()));
+				gcd = gcd.gcd(BigInteger.valueOf(impPerCampaign));
 			}
 			INDEX_STEP = gcd.intValue();
 		}
@@ -69,12 +71,14 @@ public class BasicCampaignOptmizer implements CampaignOptimizer {
 		}
 		
 		
-		for (int i = 0; i < scaledMinv + 1; i++) {
-				for (int n = 0; n < customerCampaignInfos.size(); n++) {
-					CustomerCampaignInformation next = customerCampaignInfos.get(n);
-					int weight = (next.getImpPerCampaign() != null) ? (next
-							.getImpPerCampaign()/INDEX_STEP) : 0;
-					Integer value = next.getPricePerCampaign();
+		
+		for (int n = 0; n < customerCampaignInfos.size(); n++) {
+			CustomerCampaignInformation next = customerCampaignInfos.get(n);
+			int weight = (next.getImpPerCampaign() != null) ? (next
+					.getImpPerCampaign()/INDEX_STEP) : 0;
+			Integer value = next.getPricePerCampaign();
+			for (int i = 0; i < scaledMinv + 1; i++) {
+					
 		
 					if (weight != 0
 							&& weight <= i

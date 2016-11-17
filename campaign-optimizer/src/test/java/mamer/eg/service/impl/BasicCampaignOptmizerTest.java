@@ -17,6 +17,7 @@ import mamer.eg.messages.response.CampaignOptimizerResponse.CampaignSalesQuotas;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
